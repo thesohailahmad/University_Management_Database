@@ -5,12 +5,12 @@ To design and build a robust relational database system for managing university 
 
 ## 🚀 Day 1 Progress & Achievements
 - [x] Initialized the core `university_management_db` database.
-- [x] Designed and created the `departments` and `students` tables.
+- [x] Designed and created the `departments` , `students` , `student_profiles` , `instructors` and `courses` tables.
 - [x] Implemented **Primary Keys** for unique record identification.
-- [x] Established **Foreign Key** relationships to accurately link students to their respective departments.
+- [x] Established **Foreign Key** relationships to accurately link students to their respective departments instructor and courses to their respective departments.
 - [x] Populated the database with realistic sample data for testing.
 - [x] Successfully executed core **CRUD** (Create, Read, Update, Delete) operations.
-- [x] Wrote and tested the first relational **JOIN** query to seamlessly combine student and department data.
+- [x] Wrote and tested the relational **JOIN** query to seamlessly combine student,instructors,courses and department data.
 
 ## 🛠️ PostgreSQL Concepts 
 - **Core Commands:** `CREATE TABLE`, `INSERT`, `SELECT`, `UPDATE`, `DELETE`
@@ -20,7 +20,7 @@ To design and build a robust relational database system for managing university 
 ## 📂 Project Structure
 * `database/schema.sql`: Contains the database structure and table definitions.
 * `database/seed.sql`: Contains the initial data used to populate the tables.
-* `database/queries.sql`: Contains the saved CRUD and JOIN queries for interaction and testing.
+* `database/queries.sql`: Contains the saved CRUD and JOIN and CONSTRAINT queries for interaction and testing.
 
 ## 💻 How to Run
 1. Connect to your PostgreSQL server using **pgAdmin** or your preferred CLI.

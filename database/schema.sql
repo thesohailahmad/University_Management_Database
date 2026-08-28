@@ -1,3 +1,4 @@
+--1. Department Table(hold student,instructor,courses)
 CREATE TABLE departments(
     department_id SERIAL PRIMARY KEY,
     department_name VARCHAR(100) UNIQUE NOT NULL
@@ -20,4 +21,23 @@ CREATE TABLE student_profiles (
     date_of_birth DATE NOT NULL,
     phone_number VARCHAR(20),
     address TEXT
+);
+
+--3. Instructor Table(instructor Information)
+Create Table instructors(
+    instructor_id SERIAL PRIMARY KEY,
+    instructor_name Varchar(100) NOT NULL,
+    education VARCHAR(100) NOT NULL,
+    biography TEXT NOT NULL,
+    instructor_email VARCHAR(100) UNIQUE NOT NULL,
+    department_id INT REFERENCES departments(department_id) ON DELETE SET NULL
+);
+
+--3. Courses Table(Courses Information)
+CREATE TABLE courses (
+    course_id SERIAL PRIMARY KEY,
+    course_code VARCHAR(50) NOT NULL UNIQUE,
+    course_name VARCHAR(100) NOT NULL,
+    credit_hours INT NOT NULL,
+    department_id INT REFERENCES departments(department_id) ON DELETE SET NULL
 );

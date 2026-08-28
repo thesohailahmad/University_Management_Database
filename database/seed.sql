@@ -1,4 +1,4 @@
-INSERT INTO departments(name)
+INSERT INTO departments(department_name)
 VALUES
     ('Computer Science'),
     ('Social Science'),
@@ -19,3 +19,20 @@ INSERT INTO student_profiles (student_id, date_of_birth, phone_number, address) 
 (3, '2004-11-10', '0333-1122334', 'Islamabad, Pakistan'),
 (4, '2005-01-30', '0345-9988776', 'Peshawar, Pakistan'),
 (5, '2003-09-05', '0321-5544332', 'Multan, Pakistan');
+
+
+INSERT INTO instructors (instructor_name, education, biography, instructor_email, department_id)
+VALUES 
+    ('Dr. Sarah Jenkins', 'Ph.D. in Computer Science', 'Dr. Jenkins specializes in artificial intelligence and has 10 years of industry experience.', 'sarah.jenkins@university.edu', 1),
+    ('Prof. Michael Chen', 'M.S. in Software Engineering', 'Prof. Chen focuses on database architecture and full-stack web development.', 'michael.chen@university.edu', 1),
+    ('Dr. Emily Carter', 'Ph.D. in Social Science', 'Dr. Carter is a leading researcher in big data analytics and machine learning algorithms.', 'emily.carter@university.edu', 2),
+    ('James Wilson', 'M.S. in English', 'With 15 years in cloud computing, James bridges the gap between theory and industry practice.', 'j.wilson@university.edu', 4),
+    ('Dr. Alan Turing', 'Ph.D. in Mathematics', 'Pioneer in theoretical computer science and cryptography.', 'alan.turing@university.edu', 3);
+
+INSERT INTO courses (course_code, course_name, credit_hours, department_id)
+VALUES 
+    ('CS201', 'Introduction to Programming in C++', 3, 1),
+    ('CS304', 'Introduction To Social science', 3, 2),
+    ('MTH202', 'Discrete Mathematics', 3, 3),
+    ('SE401', 'Software Engineering Principles', 4, 1),
+    ('HUM101', 'Introduction to Ethics', 2,2 );
