@@ -16,7 +16,7 @@ CREATE TABLE students (
 -- 2. Student Profiles Table (Personal Details)
 CREATE TABLE student_profiles (
     profile_id SERIAL PRIMARY KEY,
-    student_id INT UNIQUE REFERENCES students(student_id) ON DELETE CASCADE,
+    student_id INT UNIQUE NOT NULL REFERENCES students(student_id) ON DELETE CASCADE,
     date_of_birth DATE NOT NULL,
     phone_number VARCHAR(20),
     address TEXT
