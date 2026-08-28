@@ -1,6 +1,6 @@
 CREATE TABLE departments(
     department_id SERIAL PRIMARY KEY,
-    name VARCHAR(100) UNIQUE NOT NULL
+    department_name VARCHAR(100) UNIQUE NOT NULL
 );
 
 -- 1. Core Students Table
