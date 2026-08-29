@@ -36,3 +36,21 @@ VALUES
     ('MTH202', 'Discrete Mathematics', 3, 3),
     ('SE401', 'Software Engineering Principles', 4, 1),
     ('HUM101', 'Introduction to Ethics', 2,2 );
+
+
+INSERT INTO course_sections (
+    course_id,
+    instructor_id,
+    semester,
+    year,
+    room
+)
+VALUES
+(1, 1, 'Fall', 2026, 'A-101'),
+(2, 2, 'Fall', 2026, 'B-201'),
+(3, 3, 'Fall', 2026, 'C-105'),
+(4, 4, 'Spring', 2027, 'A-205'),
+(5, 5, 'Spring', 2027, 'B-102'),
+(1, 2, 'Spring', 2027, 'A-101'),
+(2, 1, 'Spring', 2027, 'B-201'),
+(3, 4, 'Fall', 2027, 'C-105');

@@ -41,3 +41,16 @@ CREATE TABLE courses (
     credit_hours INT NOT NULL,
     department_id INT REFERENCES departments(department_id) ON DELETE SET NULL
 );
+
+--4. course-section Table 
+
+CREATE TABLE course_sections (
+    section_id SERIAL PRIMARY KEY,
+    course_id INT NOT NULL,
+    instructor_id INT ,
+    semester VARCHAR(20) NOT NULL,
+    year INT NOT NULL,
+    room VARCHAR(50) NOT NULL,
+    FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE,
+    FOREIGN KEY (instructor_id) REFERENCES instructors(instructor_id) ON DELETE SET NULL
+);    
