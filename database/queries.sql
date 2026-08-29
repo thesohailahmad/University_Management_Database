@@ -107,7 +107,37 @@ UPDATE course_sections SET room = 'Lab B' WHERE section_id = 1;
 -- DELETE
 DELETE FROM course_sections WHERE section_id = 1;
 
+-- ==========================================
+--   TABLE 7 ENROLLMENTS TABLE
+-- ==========================================
 
+-- 1. CREATE (Insert new enrollments)
+-- Insert with a specific status and past date
+INSERT INTO enrollments (student_id, section_id, status, enrollment_date) 
+VALUES (2, 4, 'completed', '2026-05-15');
+
+-- Insert multiple enrollments in a single batch
+INSERT INTO enrollments (student_id, section_id) 
+VALUES 
+    (3, 1),
+    (4, 2),
+    (5, 1);
+
+
+-- 2. READ (Select enrollment data)
+-- View all records in the enrollments table
+SELECT * FROM enrollments;
+
+-- 3. UPDATE (Modify existing enrollments)
+-- Update a student's status to 'dropped' for a specific class
+UPDATE enrollments 
+SET status = 'dropped' 
+WHERE student_id = 1 AND section_id = 3;
+
+-- 4. DELETE (Remove enrollments)
+-- Delete one specific enrollment record using its primary key
+DELETE FROM enrollments 
+WHERE enrollment_id = 5;
 
 -- ============================================================================
 -- SECTION 2: JOIN OPERATIONS (Relational Reporting)
@@ -166,3 +196,124 @@ VALUES ('CS999', 'Invalid Department Test', 3, 9999);
 -- Delete a department and verify assigned instructors' department_ids switch to NULL
 DELETE FROM departments WHERE department_id = 1;
 SELECT instructor_name, department_id FROM instructors;
+
+-- ==========================================
+-- ENROLLMENTS TABLE: CONSTRAINT TESTING
+-- ==========================================
+
+-- 1. Test NOT NULL Constraint on student_id
+INSERT INTO enrollments (student_id, section_id) 
+VALUES (NULL, 1);
+
+-- 2. Test NOT NULL Constraint on section_id
+INSERT INTO enrollments (student_id, section_id) 
+VALUES (1, NULL);
+
+-- 3. Test CHECK Constraint on status
+INSERT INTO enrollments (student_id, section_id, status) 
+VALUES (1, 1, 'pending');
+
+ --4. Test UNIQUE Constraint on (student_id, section_id)
+INSERT INTO enrollments (student_id, section_id) 
+VALUES (1, 2); 
+INSERT INTO enrollments (student_id, section_id) 
+VALUES (1, 2);
+
+-- 5. Test FOREIGN KEY Constraint on student_id
+INSERT INTO enrollments (student_id, section_id) 
+VALUES (99999, 1);
+
+-- 6. Test FOREIGN KEY Constraint on section_id
+INSERT INTO enrollments (student_id, section_id) 
+VALUES (1, 99999);
+
+-- ==========================================
+-- JOIN OPERATIONS & ANALYTICS
+-- ==========================================
+
+-- 1. Comprehensive University System View
+-- Connects all major tables to show students, their courses, instructors, and status.
+
+SELECT
+    s.student_id,
+    CONCAT(s.first_name, ' ', s.last_name) AS student_name,
+    c.course_code,
+    c.course_name,
+    i.instructor_name,
+    cs.semester,
+    cs.year,
+    e.status AS enrollment_status
+FROM students s
+JOIN enrollments e
+    ON s.student_id = e.student_id
+JOIN course_sections cs
+    ON e.section_id = cs.section_id
+JOIN courses c
+    ON cs.course_id = c.course_id
+JOIN instructors i
+    ON cs.instructor_id = i.instructor_id;
+
+-- 2. Course Enrollment Counts
+-- Calculates how many students are currently enrolled in each course.
+SELECT 
+    c.course_name, 
+    COUNT(e.student_id) AS total_students
+FROM 
+    courses c
+JOIN 
+    course_sections cs ON c.course_id = cs.course_id
+JOIN 
+    enrollments e ON cs.section_id = e.section_id
+GROUP BY 
+    c.course_name;
+
+
+-- 3. Most Popular Course
+-- Identifies the single course with the highest number of enrolled students.
+SELECT 
+    c.course_name, 
+    COUNT(e.student_id) AS total_students
+FROM 
+    courses c
+JOIN 
+    course_sections cs ON c.course_id = cs.course_id
+JOIN 
+    enrollments e ON cs.section_id = e.section_id
+GROUP BY 
+    c.course_name
+ORDER BY 
+    total_students DESC
+LIMIT 1;
+
+
+-- 4. Student Course Load
+-- Counts how many sections each individual student is enrolled in.
+SELECT 
+    sp.first_name, 
+    sp.last_name, 
+    COUNT(e.section_id) AS courses_taken
+FROM 
+    StudentProfile sp
+JOIN 
+    enrollments e ON sp.student_id = e.student_id
+GROUP BY 
+    sp.student_id, sp.first_name, sp.last_name;
+
+
+-- 5. Highest Enrollment Instructor
+-- Finds the instructor teaching the largest total number of students across all their sections.
+SELECT 
+    i.first_name, 
+    i.last_name, 
+    COUNT(e.student_id) AS total_students_taught
+FROM 
+    instructors i
+JOIN 
+    course_sections cs ON i.instructor_id = cs.instructor_id
+JOIN 
+    enrollments e ON cs.section_id = e.section_id
+GROUP BY 
+    i.instructor_id, i.first_name, i.last_name
+ORDER BY 
+    total_students_taught DESC
+LIMIT 1;

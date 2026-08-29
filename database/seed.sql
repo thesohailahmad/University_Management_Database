@@ -54,3 +54,24 @@ VALUES
 (1, 2, 'Spring', 2027, 'A-101'),
 (2, 1, 'Spring', 2027, 'B-201'),
 (3, 4, 'Fall', 2027, 'C-105');
+
+INSERT INTO enrollments (student_id, section_id, status)
+VALUES
+    (1, 1, 'completed'),
+    (1, 2, 'active'),
+    (1, 3, 'active'),
+
+    (2, 1, 'active'),
+    (2, 2, 'dropped'),
+    
+
+    (3, 1, 'active'),
+    (3, 2, 'active'),
+    (3, 3, 'active'),
+    (3, 4, 'active'),
+
+    (4, 3, 'completed'),
+    (4, 4, 'active'), 
+    
+    (5, 1, 'active'),
+    (5, 4, 'dropped');

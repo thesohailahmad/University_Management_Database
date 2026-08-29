@@ -54,3 +54,16 @@ CREATE TABLE course_sections (
     FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE,
     FOREIGN KEY (instructor_id) REFERENCES instructors(instructor_id) ON DELETE SET NULL
 );    
+
+
+--7. Enrolments Table
+CREATE TABLE enrollments (
+    enrollment_id SERIAL PRIMARY KEY,
+    student_id INT NOT NULL,
+    section_id INT NOT NULL,
+    status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'completed', 'dropped')),
+    enrollment_date DATE DEFAULT CURRENT_DATE,
+    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+    FOREIGN KEY (section_id) REFERENCES course_sections(section_id) ON DELETE CASCADE,
+    UNIQUE (student_id, section_id)
+);
