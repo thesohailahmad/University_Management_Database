@@ -34,7 +34,7 @@ The current database contains:
 
 ## 📂 Project Structure
 
-\`\`\`text
+```text
 University_Management_Database/
 │
 ├── README.md
@@ -43,11 +43,11 @@ University_Management_Database/
     ├── schema.sql
     ├── seed.sql
     └── queries.sql
-\`\`\`
+```
 
 ## 🗃️ Current Database Structure
 
-\`\`\`mermaid
+```mermaid
 erDiagram
     DEPARTMENTS ||--o{ STUDENTS : has
     DEPARTMENTS ||--o{ INSTRUCTORS : has
@@ -57,8 +57,7 @@ erDiagram
     INSTRUCTORS ||--o{ COURSE_SECTIONS : teaches
     COURSE_SECTIONS ||--o{ ENROLLMENTS : includes
     STUDENTS ||--o{ ENROLLMENTS : enrolls_in
-\`\`\`
-
+```
 
 ## 💻 How to Run
 
