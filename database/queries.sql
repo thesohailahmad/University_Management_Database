@@ -232,7 +232,7 @@ VALUES (1, 99999);
 -- ==========================================
 
 -- 1. Comprehensive University System View
--- Connects all major tables to show students, their courses, instructors, and status.
+
 
 SELECT
     s.student_id,
@@ -254,7 +254,7 @@ JOIN instructors i
     ON cs.instructor_id = i.instructor_id;
 
 -- 2. Course Enrollment Counts
--- Calculates how many students are currently enrolled in each course.
+
 SELECT 
     c.course_name, 
     COUNT(e.student_id) AS total_students
@@ -269,7 +269,7 @@ GROUP BY
 
 
 -- 3. Most Popular Course
--- Identifies the single course with the highest number of enrolled students.
+
 SELECT 
     c.course_name, 
     COUNT(e.student_id) AS total_students
@@ -287,7 +287,7 @@ LIMIT 1;
 
 
 -- 4. Student Course Load
--- Counts how many sections each individual student is enrolled in.
+
 SELECT 
     sp.first_name, 
     sp.last_name, 
@@ -301,7 +301,7 @@ GROUP BY
 
 
 -- 5. Highest Enrollment Instructor
--- Finds the instructor teaching the largest total number of students across all their sections.
+
 SELECT 
     i.first_name, 
     i.last_name, 
@@ -317,3 +317,114 @@ GROUP BY
 ORDER BY 
     total_students_taught DESC
 LIMIT 1;
+
+-- =====================================
+-- GRADE QUERIES
+-- =====================================
+
+-- Basic queries
+
+SELeCt * from grades;
+
+select obtain_marks from grades where obtain_marks >= 80;
+
+SELECt total_marks from grades;
+
+SELECT grade from grades;
+
+SELECT grade from grades where enrollment_id = 1;
+
+SELECT grade from grades where grade = 'A';
+
+SELECT enrollment_id, grade, percentage from grades where grade_id = 1;
+
+-- JOIN queries
+   -- OUTPUT DATA
+--Student | Course | Instructor | Grade | Total Marks | Obtain Marks | Percentage
+
+SELECT
+ CONCAT(s.first_name, ' ', s.last_name) AS "Student Name",
+ c.course_name AS "Course",
+ i.instructor_name as "Instructor Name",
+ g.grade AS "Grade",
+ g.total_marks as "Total Marks",
+ g.obtain_marks AS "Obtain Marks",
+ g.percentage AS "Percentage"
+FROM enrollments e
+JOIN students s ON e.student_id = s.student_id
+JOIN course_sections cs ON e.section_id = cs.section_id
+JOIN courses c ON cs.course_id = c.course_id
+JOIN instructors i ON cs.instructor_id = i.instructor_id
+JOIN grades g ON e.enrollment_id = g.enrollment_id;
+
+-- Student transcript
+   -- OUTPUT DATA OF ONE STUDENT
+--Course Code | Course Name | Semester | Marks | Grade
+
+SELECT 
+    c.course_code AS "Course Code",
+    c.course_name AS "Course Name",
+    cs.semester AS "Semester",
+    g.obtain_marks AS "Marks",
+    g.grade AS "Grade"
+FROM enrollments e
+JOIN course_sections cs ON e.section_id = cs.section_id
+JOIN courses c ON cs.course_id = c.course_id
+JOIN grades g ON e.enrollment_id = g.enrollment_id
+WHERE e.student_id = 1;
+
+-- Analytics
+
+--Average marks
+SELECT AVG(obtain_marks) from grades;
+
+--Average per course
+SELECT 
+    c.course_name AS "Course",
+    ROUND(AVG(g.obtain_marks), 1) AS "Average"
+FROM courses c
+JOIN course_sections cs ON c.course_id = cs.course_id
+JOIN enrollments e ON cs.section_id = e.section_id
+JOIN grades g ON e.enrollment_id = g.enrollment_id
+GROUP BY c.course_name;
+
+--Highest performer
+SELECT 
+    CONCAT(s.first_name, ' ', s.last_name) AS "Student Name",
+    g.obtain_marks AS "Highest Marks"
+FROM students s
+JOIN enrollments e ON s.student_id = e.student_id
+JOIN grades g ON e.enrollment_id = g.enrollment_id
+ORDER BY g.obtain_marks DESC
+LIMIT 1;
+
+--Course performance
+SELECT 
+    c.course_name AS "Course Name",
+    ROUND(AVG(g.obtain_marks), 1) AS "Average Marks"
+FROM courses c
+JOIN course_sections cs ON c.course_id = cs.course_id
+JOIN enrollments e ON cs.section_id = e.section_id
+JOIN grades g ON e.enrollment_id = g.enrollment_id
+GROUP BY c.course_name
+ORDER BY AVG(g.obtain_marks) DESC
+LIMIT 1;
+
+-- Constraint tests
+INSERT INTO grades(enrollment_id, total_marks,obtain_marks)
+VALUES(9999,0939508,03895038520,'A, A+')
+
+--CRUD OPERATION
+
+--Create 
+INSERT INTO grades(enrollment_id,total_marks,obtain_marks,grade)
+VALUES(13,150,140,'A++')
+
+--READ
+SELECT * From grades;
+
+--UPDATE
+UPDATE grades SET obtain_marks = 150 WHERE grade_id = 16;
+
+--DELETE
+DELETE FROM grades WHERE grade_id = 16;

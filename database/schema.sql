@@ -67,3 +67,16 @@ CREATE TABLE enrollments (
     FOREIGN KEY (section_id) REFERENCES course_sections(section_id) ON DELETE CASCADE,
     UNIQUE (student_id, section_id)
 );
+
+
+--8. Gardes Table
+CREATE TABLE grades(
+    grade_id SERIAL PRIMARY KEY,
+    enrollment_id INT NOT NULL,
+    total_marks INT NOT NULL,
+    obtain_marks INT NOT NULL,
+    grade VARCHAR(10) NOT NULL,
+    percentage DECIMAL(5,2) GENERATED ALWAYS AS ((obtain_marks * 100.0) / total_marks) STORED,
+    FOREIGN KEY (enrollment_id) REFERENCES enrollments(enrollment_id) ON DELETE CASCADE,
+    CHECK (obtain_marks >= 0 AND obtain_marks <= total_marks)
+);
