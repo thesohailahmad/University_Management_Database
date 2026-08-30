@@ -20,6 +20,45 @@ To design and build a robust relational database system for managing university 
 
 ---
 
+## 🛠️ PostgreSQL Concepts Implemented
+
+### SQL Operations
+
+- `CREATE TABLE`
+- `INSERT`
+- `SELECT`
+- `UPDATE`
+- `DELETE`
+- `WHERE`
+- `ORDER BY`
+
+### Database Design & Integrity
+
+- Primary Keys
+- Foreign Keys
+- `UNIQUE`
+- `NOT NULL`
+- `CHECK`
+- `SERIAL`
+- `ON DELETE SET NULL`
+- `ON DELETE CASCADE`
+
+### Relationships
+
+- One-to-One relationships
+- One-to-Many relationships
+- Many-to-Many relationships
+- Junction/Association tables
+
+### Querying & Analytics
+
+- `JOIN`
+- Multi-table JOINs
+- `GROUP BY`
+- `COUNT()`
+- `AVG()`
+- `LIMIT`
+
 ## 🗃️ Current Database Implementation
 
 The current database contains:
@@ -31,6 +70,7 @@ The current database contains:
 - **Courses** — courses offered by departments.
 - **Course Sections** — specific course offerings by semester, year, room, and instructor.
 - **Enrollments** — connects students with course sections.
+- **Grades** — stores academic marks and grades associated with student enrollments.
 
 ## 📂 Project Structure
 
@@ -57,6 +97,7 @@ erDiagram
     INSTRUCTORS ||--o{ COURSE_SECTIONS : teaches
     COURSE_SECTIONS ||--o{ ENROLLMENTS : includes
     STUDENTS ||--o{ ENROLLMENTS : enrolls_in
+    ENROLLMENTS ||--o| GRADES : receives
 ```
 
 ## 💻 How to Run
