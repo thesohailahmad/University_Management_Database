@@ -58,6 +58,8 @@ To design and build a robust relational database system for managing university 
 - `COUNT()`
 - `AVG()`
 - `LIMIT`
+- `HAVING`
+- `CASE`
 
 ## 🗃️ Current Database Implementation
 
@@ -71,6 +73,7 @@ The current database contains:
 - **Course Sections** — specific course offerings by semester, year, room, and instructor.
 - **Enrollments** — connects students with course sections.
 - **Grades** — stores academic marks and grades associated with student enrollments.
+- **Attendance** — records student attendance for enrolled course sections.
 
 ## 📂 Project Structure
 
@@ -98,6 +101,7 @@ erDiagram
     COURSE_SECTIONS ||--o{ ENROLLMENTS : includes
     STUDENTS ||--o{ ENROLLMENTS : enrolls_in
     ENROLLMENTS ||--o| GRADES : receives
+    ENROLLMENTS ||--o{ ATTENDANCE : records
 ```
 
 ## 💻 How to Run
