@@ -92,3 +92,41 @@ VALUES
     (11, 75, 62, 'B'),
     (12, 75, 70, 'A'),
     (13, 100, 81, 'B+');
+
+
+INSERT INTO attendance (enrollment_id, attendance_date, status, notes)
+VALUES
+    -- Monday: August 24, 2026
+    (1, '2026-08-24', 'Present', NULL),
+    (2, '2026-08-24', 'Present', NULL),
+    (3, '2026-08-24', 'Present', NULL),
+    (4, '2026-08-24', 'Late', 'Overslept'),
+    (5, '2026-08-24', 'Present', NULL),
+    
+    -- Tuesday: August 25, 2026
+    (1, '2026-08-25', 'Present', NULL),
+    (2, '2026-08-25', 'Absent', 'No call no show'),
+    (3, '2026-08-25', 'Present', NULL),
+    (4, '2026-08-25', 'Present', NULL),
+    (5, '2026-08-25', 'Present', NULL),
+    
+    -- Wednesday: August 26, 2026
+    (1, '2026-08-26', 'Late', 'Bus delayed'),
+    (2, '2026-08-26', 'Present', NULL),
+    (3, '2026-08-26', 'Excused', 'Doctor appointment'),
+    (4, '2026-08-26', 'Late', 'Traffic'),
+    (5, '2026-08-26', 'Present', NULL),
+    
+    -- Thursday: August 27, 2026
+    (1, '2026-08-27', 'Present', NULL),
+    (2, '2026-08-27', 'Absent', NULL),
+    (3, '2026-08-27', 'Present', NULL),
+    (4, '2026-08-27', 'Absent', 'Felt sick'),
+    (5, '2026-08-27', 'Present', NULL),
+    
+    -- Friday: August 28, 2026
+    (1, '2026-08-28', 'Present', NULL),
+    (2, '2026-08-28', 'Present', NULL),
+    (3, '2026-08-28', 'Present', NULL),
+    (4, '2026-08-28', 'Present', NULL),
+    (5, '2026-08-28', 'Present', NULL);

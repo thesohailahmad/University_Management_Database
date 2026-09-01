@@ -428,3 +428,107 @@ UPDATE grades SET obtain_marks = 150 WHERE grade_id = 16;
 
 --DELETE
 DELETE FROM grades WHERE grade_id = 16;
+
+-- =====================================
+-- ATTENDANCE QUERIES
+-- =====================================
+
+-- Basic queries
+SELECT * from attendance;
+
+SELECT * from attendance where enrollment_id = 1;
+
+SELECT * from attendance where status = 'Present';
+
+SELECT * FROM attendance 
+WHERE enrollment_id = 4 
+ORDER BY attendance_date;
+
+SELECT * FROM attendance 
+WHERE status IN ('Absent', 'Late')
+ORDER BY attendance_date;
+
+SELECT * FROM attendance 
+WHERE attendance_date = '2026-08-26';
+
+--Join queries
+ -- OUTPUT DATA
+--Student | Course | Attendance Date | Status | Notes
+SELECT 
+    CONCAT(s.first_name, ' ', s.last_name) AS "Student Name",
+    c.course_name AS "Course",
+	a.attendance_date AS "Attendance Date",
+    a.status AS "Status",
+    a.notes AS "Notes"
+FROM attendance a
+JOIN enrollments e ON a.enrollment_id = e.enrollment_id
+JOIN students s ON e.student_id = s.student_id
+JOIN course_sections cs ON e.section_id = cs.section_id 
+JOIN courses c ON cs.course_id = c.course_id           
+
+
+-- ANLYTICS Queries
+
+--OUTPUT DATA
+--Student | Present | Absent | Late | Excused | Total Classes | Attendance %
+SELECT 
+    CONCAT(s.first_name, ' ', s.last_name) AS "Student Name",
+    COUNT(CASE WHEN a.status = 'Present' THEN 1 END) AS "Present",
+    COUNT(CASE WHEN a.status = 'Absent' THEN 1 END) AS "Absent",
+	COUNT(CASE WHEN a.status = 'Late' THEN 1 END) AS "Late",
+	COUNT(CASE WHEN a.status = 'Excused' THEN 1 END) AS "Excused",
+    COUNT(a.attendance_id) AS "Total Classes",
+    ROUND(
+        COUNT(CASE WHEN a.status = 'Present' THEN 1 END) * 100.0 / COUNT(a.attendance_id), 
+        2
+    ) AS "Attendance %"
+FROM attendance a
+JOIN enrollments e ON a.enrollment_id = e.enrollment_id
+JOIN students s ON e.student_id = s.student_id
+GROUP BY s.student_id, s.first_name, s.last_name
+ORDER BY "Student Name";
+
+--CRUD OPERATIONS
+
+--CREATE
+INSERT INTO attendance (enrollment_id, status, notes)
+VALUES (1, 'Present', 'Arrived on time');
+
+--READ
+SELECT * FROM attendance 
+WHERE enrollment_id = 1 AND attendance_date = CURRENT_DATE;
+
+--UPDATE
+UPDATE attendance
+SET status = 'Excused', notes = 'Left early for doctor appointment'
+WHERE enrollment_id = 1 AND attendance_date = CURRENT_DATE;
+
+--DELETE
+DELETE FROM attendance
+WHERE enrollment_id = 1 AND attendance_date = CURRENT_DATE;
+
+--CONSTRAINT TESTING
+--1. Create (Valid Insert)
+INSERT INTO attendance (enrollment_id, status, notes)
+VALUES (2, 'Present', 'Arrived on time');
+
+--2. Create (Invalid Insert - Duplicate Record)
+INSERT INTO attendance (enrollment_id, status)
+VALUES (2, 'Late');
+
+--3. Create (Invalid Insert - Invalid Status)
+INSERT INTO attendance (enrollment_id, status)
+VALUES (2, 'Suspended');
+
+--4. Read (Valid Query)
+SELECT * FROM attendance 
+WHERE enrollment_id = 2 AND attendance_date = CURRENT_DATE;
+
+--5. Update (Valid Update)
+UPDATE attendance
+SET status = 'Excused', notes = 'Left early for doctor appointment'
+WHERE enrollment_id = 2 AND attendance_date = CURRENT_DATE;
+
+--6. Delete (Valid Delete)
+DELETE FROM attendance
+WHERE enrollment_id = 2 AND attendance_date = CURRENT_DATE;

@@ -80,3 +80,22 @@ CREATE TABLE grades(
     FOREIGN KEY (enrollment_id) REFERENCES enrollments(enrollment_id) ON DELETE CASCADE,
     CHECK (obtain_marks >= 0 AND obtain_marks <= total_marks)
 );
+
+CREATE TABLE attendance (
+    attendance_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    enrollment_id INT NOT NULL,
+    attendance_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    status VARCHAR(10) NOT NULL,
+    notes TEXT,
+    
+    CONSTRAINT fk_attendance_enrollment 
+        FOREIGN KEY (enrollment_id) 
+        REFERENCES enrollments(enrollment_id) 
+        ON DELETE CASCADE,
+   
+   CONSTRAINT unique_daily_attendance 
+        UNIQUE (enrollment_id, attendance_date),
+        
+    CONSTRAINT chk_valid_status 
+        CHECK (status IN ('Present', 'Absent', 'Late', 'Excused'))
+);
