@@ -81,6 +81,7 @@ CREATE TABLE grades(
     CHECK (obtain_marks >= 0 AND obtain_marks <= total_marks)
 );
 
+--9. Attendance Table
 CREATE TABLE attendance (
     attendance_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     enrollment_id INT NOT NULL,

@@ -532,3 +532,280 @@ WHERE enrollment_id = 2 AND attendance_date = CURRENT_DATE;
 --6. Delete (Valid Delete)
 DELETE FROM attendance
 WHERE enrollment_id = 2 AND attendance_date = CURRENT_DATE;
+
+
+-- ==============================
+-- ADVANCE QUIERIES
+-- ==============================
+
+-- OUTPUT DATA
+--Student Name | Course Code | Course Name | Obtain Marks | Grade | Semester | Year | Credit Hours
+SELECT 
+   CONCAT(s.first_name, ' ', s.last_name) AS "Student Name",
+    c.course_code AS "Course Code",
+    c.course_name AS "Course Name",
+	g.obtain_marks AS "Obtain Marks",
+	g.grade AS "Grade",
+    cs.semester AS "Semester",
+    cs.year AS "Year",
+    c.credit_hours AS "Credit Hours"
+FROM 
+    students s
+JOIN 
+    enrollments e ON s.student_id = e.student_id
+JOIN 
+    course_sections cs ON e.section_id = cs.section_id
+JOIN 
+    courses c ON cs.course_id = c.course_id
+LEFT JOIN 
+    grades g ON e.enrollment_id = g.enrollment_id
+ORDER BY 
+    s.last_name, 
+    s.first_name, 
+    cs.year DESC, 
+    cs.semester DESC;
+
+
+-- ================
+-- GPA CALCULATION
+--=================
+
+--Output Data
+--Student ID | Student Name | GPA
+SELECT 
+    s.student_id AS "Student ID",
+    CONCAT(s.first_name, ' ', s.last_name) AS "Student Name",
+    ROUND(
+        AVG(
+            CASE g.grade
+                WHEN 'A+' THEN 4.0
+                WHEN 'A'  THEN 4.0
+                WHEN 'A-' THEN 3.7
+                WHEN 'B+' THEN 3.3
+                WHEN 'B'  THEN 3.0
+                WHEN 'B-' THEN 2.7
+                WHEN 'C+' THEN 2.3
+                WHEN 'C'  THEN 2.0
+                WHEN 'C-' THEN 1.7
+                WHEN 'D'  THEN 1.0
+                WHEN 'F'  THEN 0.0
+            END
+        ), 2
+    ) AS "GPA"
+FROM 
+    students s
+JOIN 
+    enrollments e ON s.student_id = e.student_id
+JOIN 
+    grades g ON e.enrollment_id = g.enrollment_id
+WHERE 
+    g.grade IS NOT NULL
+GROUP BY 
+    s.student_id, 
+    s.first_name, 
+    s.last_name
+ORDER BY 
+    "GPA" DESC;
+
+
+-- ==================
+-- COURSE STATISTICS
+--===================
+
+--Output Data
+--Course Code | Course Name | Total Students | Average Marks | Highest Marks | Lowest Marks
+SELECT 
+    c.course_code AS "Course Code",
+	c.course_name AS "Course",
+    COUNT(e.student_id) AS "Number of Students",
+    ROUND(AVG(g.obtain_marks), 2) AS "Average Marks",
+    MAX(g.obtain_marks) AS "Highest Marks",
+    MIN(g.obtain_marks) AS "Lowest Marks"
+FROM 
+    courses c
+JOIN 
+    course_sections cs ON c.course_id = cs.course_id
+JOIN 
+    enrollments e ON cs.section_id = e.section_id
+LEFT JOIN 
+    grades g ON e.enrollment_id = g.enrollment_id
+GROUP BY 
+    c.course_id, 
+    c.course_name
+ORDER BY 
+    c.course_name;
+
+-- ==================
+-- Instructor Work
+--===================
+
+--Output Data
+--Instructor Name | Total Courses | Total Students 
+SELECT 
+    i.instructor_name AS "Instructor Name",
+    COUNT(e.student_id) AS "Students"
+FROM 
+    instructors i
+JOIN 
+    course_sections cs ON i.instructor_id = cs.instructor_id
+JOIN 
+    enrollments e ON cs.section_id = e.section_id
+GROUP BY 
+    i.instructor_id, 
+	i.instructor_name
+ORDER BY 
+    "Students" DESC;
+
+-- =======================
+-- DEPARTMENTS STATISTICS
+--========================
+
+--Output Data
+--Department Name | Total Courses | Total Students | Total Instructors
+SELECT 
+    d.department_name AS "Department Name",
+    COUNT(DISTINCT c.course_id) AS "Total Courses",
+    COUNT(DISTINCT s.student_id) AS "Total Students",
+    COUNT(DISTINCT i.instructor_id) AS "Total Instructors"
+FROM 
+    departments d
+LEFT JOIN 
+    students s ON d.department_id = s.department_id
+LEFT JOIN 
+    courses c ON d.department_id = c.department_id
+LEFT JOIN 
+    instructors i ON d.department_id = i.department_id
+GROUP BY 
+    d.department_id, 
+    d.department_name
+ORDER BY 
+    d.department_name;
+
+
+-- =======================
+-- STUDENT ACADEMIC VIEW
+--========================
+
+CREATE OR REPLACE VIEW student_academic_report AS
+SELECT 
+   CONCAT(s.first_name, ' ', s.last_name) AS "Student Name",
+    c.course_code AS "Course Code",
+    c.course_name AS "Course Name",
+	g.obtain_marks AS "Obtain Marks",
+	g.grade AS "Grade",
+    cs.semester AS "Semester",
+    cs.year AS "Year",
+    c.credit_hours AS "Credit Hours"
+FROM 
+    students s
+JOIN 
+    enrollments e ON s.student_id = e.student_id
+JOIN 
+    course_sections cs ON e.section_id = cs.section_id
+JOIN 
+    courses c ON cs.course_id = c.course_id
+LEFT JOIN 
+    grades g ON e.enrollment_id = g.enrollment_id
+ORDER BY 
+    s.last_name, 
+    s.first_name, 
+    cs.year DESC, 
+    cs.semester DESC;
+
+
+SELECT * FROM student_academic_report;
+
+
+-- =======================
+-- STUDENT ATTENDANCE VIEW
+--========================
+
+CREATE OR REPLACE VIEW student_attendance_report AS
+SELECT 
+    CONCAT(s.first_name, ' ', s.last_name) AS "Student Name",
+    c.course_name AS "Course Name",
+    COUNT(a.status) AS "Total Classes",
+    COUNT(CASE WHEN a.status = 'Present' THEN 1 END) AS "Present",
+    COUNT(CASE WHEN a.status = 'Absent' THEN 1 END) AS "Absent",
+    ROUND(
+        (COUNT(CASE WHEN a.status = 'Present' THEN 1 END) * 100.0) / 
+        NULLIF(COUNT(a.status), 0), 2
+    ) AS "Attendance %"
+FROM 
+    students s
+JOIN 
+    enrollments e ON s.student_id = e.student_id
+JOIN 
+    course_sections cs ON e.section_id = cs.section_id
+JOIN 
+    courses c ON cs.course_id = c.course_id
+
+LEFT JOIN 
+    attendance a ON e.enrollment_id = a.enrollment_id
+GROUP BY 
+    s.student_id, 
+    s.first_name, 
+    s.last_name,
+    c.course_id,
+    c.course_name;
+
+SELECT * FROM student_attendance_report;
+
+-- ====================================
+-- INDEXES FOR PERFORMANCE OPTIMIZATION
+--=====================================
+
+-- Speeds up queries looking for all enrollments of a specific student
+CREATE INDEX idx_enrollments_student_id ON enrollments(student_id);
+
+-- Speeds up queries fetching all students in a specific class section
+CREATE INDEX idx_enrollments_section_id ON enrollments(section_id);
+
+-- Speeds up attendance lookups for specific enrollments
+CREATE INDEX idx_attendance_enrollment_id ON attendance(enrollment_id);
+
+
+EXPLAIN
+SELECT * FROM enrollments WHERE student_id = 5;
+
+EXPLAIN ANALYZE
+SELECT * FROM enrollments WHERE student_id = 5;
+
+-- =======================
+-- TRANSACTION MANAGEMENT
+--========================
+
+--1. COMMIT
+BEGIN;
+
+UPDATE students
+SET first_name = 'Ahmad'
+WHERE student_id = 1;
+
+COMMIT;
+
+--2. ROLLBACK
+BEGIN;
+
+UPDATE students
+SET first_name = 'Temporary'
+WHERE student_id = 1;
+
+ROLLBACK;
+
+--A transaction becomes especially useful when you have multiple changes that should either all succeed or all be undone.
+
+-- =======================
+-- POSTGRESQL FUNCTION
+--========================
+
+CREATE OR REPLACE FUNCTION get_student_course_count(p_student_id INT)
+RETURNS INT
+LANGUAGE SQL
+AS $$
+    SELECT COUNT(*)::INT
+    FROM enrollments
+    WHERE student_id = p_student_id;
+$$;
+
+SELECT get_student_course_count(1) AS "Course Count for Student 1";
