@@ -59,7 +59,14 @@ To design and build a robust relational database system for managing university 
 - `AVG()`
 - `LIMIT`
 - `HAVING`
-- `CASE`
+- `Aggregate Functions`
+- `CASE Expression`
+- `Subqueries`
+- `Views`
+- `Indexes`
+- `Transactions`
+- `PostgreSQL Functions`
+- Data Integrity and Referential Integrity
 
 ## 🗃️ Current Database Implementation
 
