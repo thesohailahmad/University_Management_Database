@@ -64,9 +64,11 @@ To design and build a robust relational database system for managing university 
 - `Subqueries`
 - `Views`
 - `Indexes`
+- `EXPLAIN AND EXPLAIN ANALYZE`
 - `Transactions`
 - `PostgreSQL Functions`
 - Data Integrity and Referential Integrity
+- `GENERATED ALWAYS AS ... STORED`
 
 ## 🗃️ Current Database Implementation
 
@@ -116,6 +118,7 @@ erDiagram
 1. Connect to your PostgreSQL server using **pgAdmin** or your preferred CLI.
 2. Create a new database named `university_management_db`.
 3. Open the Query Tool and execute the SQL scripts in the following order:
-   - First, run `schema.sql` to build the tables.
+   - First, Open `database` folder
+   - second, run `schema.sql` to build the tables.
    - Next, run `seed.sql` to insert the initial data.
-   - Finally, use `queries.sql` to test the relationships and view the data
+   - Finally, use `queries.sql` to test the relationships and view the data.
