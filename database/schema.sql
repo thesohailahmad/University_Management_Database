@@ -4,7 +4,7 @@ CREATE TABLE departments(
     department_name VARCHAR(100) UNIQUE NOT NULL
 );
 
--- 1. Core Students Table
+-- 2. Core Students Table
 CREATE TABLE students (
     student_id SERIAL PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE students (
     department_id INT REFERENCES departments(department_id) ON DELETE SET NULL
 );
 
--- 2. Student Profiles Table (Personal Details)
+-- 3. Student Profiles Table (Personal Details)
 CREATE TABLE student_profiles (
     profile_id SERIAL PRIMARY KEY,
     student_id INT UNIQUE NOT NULL REFERENCES students(student_id) ON DELETE CASCADE,
@@ -23,7 +23,7 @@ CREATE TABLE student_profiles (
     address TEXT
 );
 
---3. Instructor Table(instructor Information)
+-- 4. Instructor Table(instructor Information)
 Create Table instructors(
     instructor_id SERIAL PRIMARY KEY,
     instructor_name Varchar(100) NOT NULL,
@@ -33,7 +33,7 @@ Create Table instructors(
     department_id INT REFERENCES departments(department_id) ON DELETE SET NULL
 );
 
---3. Courses Table(Courses Information)
+--5. Courses Table(Courses Information)
 CREATE TABLE courses (
     course_id SERIAL PRIMARY KEY,
     course_code VARCHAR(50) NOT NULL UNIQUE,
@@ -42,7 +42,7 @@ CREATE TABLE courses (
     department_id INT REFERENCES departments(department_id) ON DELETE SET NULL
 );
 
---4. course-section Table 
+--6. course-section Table 
 
 CREATE TABLE course_sections (
     section_id SERIAL PRIMARY KEY,

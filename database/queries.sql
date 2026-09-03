@@ -2,14 +2,12 @@
 -- UNIVERSITY MANAGEMENT SYSTEM: MASTER QUERY FILE
 -- ============================================================================
 
-
--- ============================================================================
--- SECTION 1: C.R.U.D. OPERATIONS (Create, Read, Update, Delete)
--- ============================================================================
-
 -- ---------------------------------------------------------
 -- TABLE 1: DEPARTMENTS
 -- ---------------------------------------------------------
+
+-- CRUD OPERATION
+
 -- CREATE
 INSERT INTO departments (department_name) VALUES ('Artificial Intelligence');
 
@@ -17,45 +15,83 @@ INSERT INTO departments (department_name) VALUES ('Artificial Intelligence');
 SELECT * FROM departments;
 
 -- UPDATE
-UPDATE departments SET department_name = 'Advanced AI' WHERE department_id = 6;
+UPDATE departments SET department_name = 'Advanced AI' WHERE department_id = 8;
 
 -- DELETE
-DELETE FROM departments WHERE department_id = 6;
+DELETE FROM departments WHERE department_id = 8;
+
+
+--CONSTRAINT TEST
+
+INSERT into departments(department_name) VALUES ('Computer Science');
+
+INSERT into departments(deparment_name) VALUES (NULL);
 
 
 -- ---------------------------------------------------------
 -- TABLE 2: STUDENTS
 -- ---------------------------------------------------------
+
+--CRUD OPERATION
+
 -- CREATE
 INSERT INTO students (first_name, last_name, email, department_id) 
-VALUES ('Zain', 'Abbas', 'zain.abbas@email.com', 1);
+VALUES ('Sohail', 'Ahmad', 'Sohail.ahmad@student.edu.pk', 1);
 
 -- READ
-SELECT first_name, last_name, enrollment_date FROM students WHERE enrollment_date > '2026-08-02';
+SELECT * FROM students;
 
 -- UPDATE
-UPDATE students SET email = 'zain.abbas.official@email.com' WHERE student_id = 6;
+UPDATE students SET email = 'khadija.farooq.official@student.edu.pk' WHERE student_id = 12;
 
 -- DELETE
-DELETE FROM students WHERE student_id = 6;
+DELETE FROM students WHERE student_id = 12;
+
+--CONSTRAINT TEST
+
+-- 1. Test Duplicate Email
+INSERT INTO students (first_name, last_name, email, department_id)
+VALUES ('Test', 'User', 'ayaan.khan@student.edu.pk', 1);
+
+-- 2. Test Missing Required Field 
+INSERT INTO students (first_name, last_name, email, department_id)
+VALUES (NULL, 'User', 'missing.name@student.edu.pk', 1);
+
+-- 3. Test Invalid Department
+INSERT INTO students (first_name, last_name, email, department_id)
+VALUES ('Test', 'User', 'invalid.dept@student.edu.pk', 9999);
+
 
 
 -- ---------------------------------------------------------
 -- TABLE 3: STUDENT PROFILES
 -- ---------------------------------------------------------
 -- CREATE
-INSERT INTO student_profiles (student_id, phone_number) 
-VALUES (1, '555-0199');
+INSERT INTO student_profiles (student_id, date_of_birth, phone_number) 
+VALUES (12, '2003-08-16', '+92 38769376 5554');
 
 -- READ
-SELECT * FROM student_profiles WHERE student_id = 1;
+SELECT * FROM student_profiles;
 
 -- UPDATE
-UPDATE student_profiles SET phone_number = '555-0999' WHERE profile_id = 1;
+UPDATE student_profiles SET phone_number = '+92 38769376 555' WHERE profile_id = 12;
 
 -- DELETE
-DELETE FROM student_profiles WHERE profile_id = 1;
+DELETE FROM student_profiles WHERE profile_id = 12;
 
+--CONSTRAINT TEST
+
+-- 1. Test 1-to-1 Violation 
+INSERT INTO student_profiles (student_id, date_of_birth, phone_number, address)
+VALUES (1, '2003-01-01', '+92 300 0000000', 'Duplicate profile test');
+
+-- 2. Test Invalid Student FK 
+INSERT INTO student_profiles (student_id, date_of_birth, phone_number, address)
+VALUES (9999, '2003-01-01', '+92 300 0000000', 'Non-existent student');
+
+-- 3. Test Missing Required DOB 
+INSERT INTO student_profiles (student_id, date_of_birth, phone_number, address)
+VALUES (2, NULL, '+92 300 0000000', 'Missing birth date');
 
 -- ---------------------------------------------------------
 -- TABLE 4: INSTRUCTORS
@@ -65,13 +101,27 @@ INSERT INTO instructors (instructor_name, education, biography, instructor_email
 VALUES ('Dr. Alice Smith', 'Ph.D. in Physics', 'Specializes in quantum computing.', 'alice.smith@university.edu', 1);
 
 -- READ
-SELECT instructor_name, department_id FROM instructors WHERE instructor_id = 1;
+SELECT * FROM instructors;
 
 -- UPDATE
-UPDATE instructors SET education = 'Post-Doc in Physics', department_id = 2 WHERE instructor_id = 1;
+UPDATE instructors SET education = 'Post-Doc in Physics', department_id = 6 WHERE instructor_id = 7;
 
 -- DELETE
 DELETE FROM instructors WHERE instructor_id = 1;
+
+--CONSTRAINT TEST
+
+--1. Test Duplicate Email
+INSERT INTO instructors (instructor_name, education, biography, instructor_email, department_id)
+VALUES ('Dr. Duplicate', 'PhD in CS', 'Bio test', 'tariq.mahmood@univ.edu.pk', 1);
+
+-- 2. Test Missing Required Name 
+INSERT INTO instructors (instructor_name, education, biography, instructor_email, department_id)
+VALUES (NULL, 'PhD in CS', 'Bio test', 'missing.name@univ.edu.pk', 1);
+
+-- 3. Test Invalid Department FK 
+INSERT INTO instructors (instructor_name, education, biography, instructor_email, department_id)
+VALUES ('Dr. Alien', 'PhD in CS', 'Bio test', 'alien.dept@univ.edu.pk', 9999);
 
 
 -- ---------------------------------------------------------
@@ -82,7 +132,7 @@ INSERT INTO courses (course_code, course_name, credit_hours, department_id)
 VALUES ('CS402', 'Introduction to Python Programming', 3, 1);
 
 -- READ
-SELECT course_name, credit_hours FROM courses WHERE course_id = 1;
+SELECT * FROM courses;
 
 -- UPDATE
 UPDATE courses SET credit_hours = 4 WHERE course_id = 1;
@@ -90,16 +140,30 @@ UPDATE courses SET credit_hours = 4 WHERE course_id = 1;
 -- DELETE
 DELETE FROM courses WHERE course_id = 1;
 
+--CONSTRAINT TEST
+
+-- 1. Test Duplicate Course Code 
+INSERT INTO courses (course_code, course_name, credit_hours, department_id)
+VALUES ('CS101', 'Duplicate Intro to Programming', 3, 1);
+
+-- 2. Test Missing Required Course Name 
+INSERT INTO courses (course_code, course_name, credit_hours, department_id)
+VALUES ('CS999', NULL, 3, 1);
+
+-- 3. Test Invalid Department FK 
+INSERT INTO courses (course_code, course_name, credit_hours, department_id)
+VALUES ('CS999', 'Advanced Topics', 3, 9999);
 
 -- ---------------------------------------------------------
 -- TABLE 6: COURSE SECTIONS
 -- ---------------------------------------------------------
+
 -- CREATE
 INSERT INTO course_sections (course_id, instructor_id, semester, year, room) 
 VALUES (1, 1, 'Fall', 2026, 'Room 301');
 
 -- READ
-SELECT * FROM course_sections WHERE semester = 'Fall' AND year = 2026;
+SELECT * FROM course_sections ;
 
 -- UPDATE
 UPDATE course_sections SET room = 'Lab B' WHERE section_id = 1;
@@ -107,16 +171,29 @@ UPDATE course_sections SET room = 'Lab B' WHERE section_id = 1;
 -- DELETE
 DELETE FROM course_sections WHERE section_id = 1;
 
+
+--CONSTRAINT TEST
+
+-- 1. Test Missing Course ID
+INSERT INTO course_sections (course_id, instructor_id, semester, year, room)
+VALUES (NULL, 1, 'Fall', 2026, 'Room 101');
+
+-- 2. Test Invalid Course FK (Should FAIL: foreign key error)
+INSERT INTO course_sections (course_id, instructor_id, semester, year, room)
+VALUES (9999, 1, 'Fall', 2026, 'Room 101');
+
+-- 3. Test Invalid Instructor FK (Should FAIL: foreign key error)
+INSERT INTO course_sections (course_id, instructor_id, semester, year, room)
+VALUES (1, 9999, 'Fall', 2026, 'Room 101');
+
 -- ==========================================
 --   TABLE 7 ENROLLMENTS TABLE
 -- ==========================================
 
 -- 1. CREATE (Insert new enrollments)
--- Insert with a specific status and past date
+
 INSERT INTO enrollments (student_id, section_id, status, enrollment_date) 
 VALUES (2, 4, 'completed', '2026-05-15');
-
--- Insert multiple enrollments in a single batch
 INSERT INTO enrollments (student_id, section_id) 
 VALUES 
     (3, 1),
@@ -124,20 +201,121 @@ VALUES
     (5, 1);
 
 
--- 2. READ (Select enrollment data)
--- View all records in the enrollments table
+-- 2. READ 
 SELECT * FROM enrollments;
 
 -- 3. UPDATE (Modify existing enrollments)
--- Update a student's status to 'dropped' for a specific class
 UPDATE enrollments 
 SET status = 'dropped' 
 WHERE student_id = 1 AND section_id = 3;
 
 -- 4. DELETE (Remove enrollments)
--- Delete one specific enrollment record using its primary key
 DELETE FROM enrollments 
 WHERE enrollment_id = 5;
+
+--CONSTRAINT TEST
+
+-- 1. Test Duplicate Enrollment (Should FAIL: unique constraint student_id + section_id)
+INSERT INTO enrollments (student_id, section_id, status)
+VALUES (1, 1, 'active');
+
+-- 2. Test Invalid Status Check Constraint (Should FAIL: check constraint violation)
+INSERT INTO enrollments (student_id, section_id, status)
+VALUES (8, 2, 'pending');
+
+-- 3. Test Invalid Student FK (Should FAIL: foreign key error)
+INSERT INTO enrollments (student_id, section_id, status)
+VALUES (9999, 1, 'active');
+
+-- 4. Test Invalid Section FK (Should FAIL: foreign key error)
+INSERT INTO enrollments (student_id, section_id, status)
+VALUES (1, 9999, 'active');
+
+-- ==========================================
+--   TABLE 8 GRADES TABLE
+-- ==========================================
+
+--Create 
+INSERT INTO grades(enrollment_id,total_marks,obtain_marks,grade)
+VALUES(13,150,140,'A++');
+
+--READ
+SELECT * From grades;
+
+--UPDATE
+UPDATE grades SET obtain_marks = 150 WHERE grade_id = 16;
+
+--DELETE
+DELETE FROM grades WHERE grade_id = 16;
+
+--CONSTRAINT TEST
+
+-- 1. Test Marks Greater Than Total Marks 
+INSERT INTO grades (enrollment_id, total_marks, obtain_marks, grade)
+VALUES (1, 100, 105, 'A+');
+
+-- 2. Test Negative Obtained Marks 
+INSERT INTO grades (enrollment_id, total_marks, obtain_marks, grade)
+VALUES (1, 100, -10, 'F');
+
+-- 3. Test Invalid Enrollment FK
+INSERT INTO grades (enrollment_id, total_marks, obtain_marks, grade)
+VALUES (9999, 100, 85, 'A');
+
+-- 4. Test Missing Required Marks 
+INSERT INTO grades (enrollment_id, total_marks, obtain_marks, grade)
+VALUES (1, 100, NULL, 'F');
+
+-- ==========================================
+--   TABLE 9 ATTENDANCE TABLE
+-- ==========================================
+
+--CRUD OPERATIONS
+
+--CREATE
+INSERT INTO attendance (enrollment_id, status, notes)
+VALUES (1, 'Present', 'Arrived on time');
+
+--READ
+SELECT * FROM attendance 
+WHERE enrollment_id = 16 AND attendance_date = CURRENT_DATE;
+
+--UPDATE
+UPDATE attendance
+SET status = 'Excused', notes = 'Left early for doctor appointment'
+WHERE enrollment_id = 16 AND attendance_id = 1;
+
+--DELETE
+DELETE FROM attendance
+WHERE enrollment_id = 16 AND attendance_id = 1;
+
+--CONSTRAINT TESTING
+
+--1.  (Valid Insert)
+INSERT INTO attendance (enrollment_id, status, notes)
+VALUES (16, 'Present', 'Arrived on time');
+
+--2.  (Invalid Insert - Duplicate Record)
+INSERT INTO attendance (enrollment_id, status)
+VALUES (16, 'Late');
+
+--3.  (Invalid Insert - Invalid Status)
+INSERT INTO attendance (enrollment_id, status)
+VALUES (16, 'Suspended');
+
+--4.  (Valid Query)
+SELECT * FROM attendance 
+WHERE enrollment_id = 16 AND attendance_date = CURRENT_DATE;
+
+--5. Update (Valid Update)
+UPDATE attendance
+SET status = 'Excused', notes = 'Left early for doctor appointment'
+WHERE enrollment_id = 16 AND attendance_date = CURRENT_DATE;
+
+--6. Delete (Valid Delete)
+DELETE FROM attendance
+WHERE enrollment_id = 16 AND attendance_date = CURRENT_DATE;
+
 
 -- ============================================================================
 -- SECTION 2: JOIN OPERATIONS (Relational Reporting)
@@ -174,58 +352,6 @@ FROM course_sections cs
 JOIN courses c ON cs.course_id = c.course_id
 JOIN instructors i ON cs.instructor_id = i.instructor_id;
 
-
-
--- ============================================================================
--- SECTION 3: CONSTRAINT TESTING
--- ============================================================================
-
--- 1. Testing UNIQUE Constraint (Should fail if CS201 already exists)
-INSERT INTO courses (course_code, course_name, credit_hours, department_id)
-VALUES ('CS201', 'Duplicate Course Test', 3, 1);
-
--- 2. Testing NOT NULL Constraint (Should fail due to missing course_name)
-INSERT INTO courses (course_code, course_name, credit_hours, department_id)
-VALUES ('CS505', NULL, 3, 1);
-
--- 3. Testing FOREIGN KEY Constraint (Should fail if department 9999 doesn't exist)
-INSERT INTO courses (course_code, course_name, credit_hours, department_id)
-VALUES ('CS999', 'Invalid Department Test', 3, 9999);
-
--- 4. Testing ON DELETE SET NULL
--- Delete a department and verify assigned instructors' department_ids switch to NULL
-DELETE FROM departments WHERE department_id = 1;
-SELECT instructor_name, department_id FROM instructors;
-
--- ==========================================
--- ENROLLMENTS TABLE: CONSTRAINT TESTING
--- ==========================================
-
--- 1. Test NOT NULL Constraint on student_id
-INSERT INTO enrollments (student_id, section_id) 
-VALUES (NULL, 1);
-
--- 2. Test NOT NULL Constraint on section_id
-INSERT INTO enrollments (student_id, section_id) 
-VALUES (1, NULL);
-
--- 3. Test CHECK Constraint on status
-INSERT INTO enrollments (student_id, section_id, status) 
-VALUES (1, 1, 'pending');
-
- --4. Test UNIQUE Constraint on (student_id, section_id)
-INSERT INTO enrollments (student_id, section_id) 
-VALUES (1, 2); 
-INSERT INTO enrollments (student_id, section_id) 
-VALUES (1, 2);
-
--- 5. Test FOREIGN KEY Constraint on student_id
-INSERT INTO enrollments (student_id, section_id) 
-VALUES (99999, 1);
-
--- 6. Test FOREIGN KEY Constraint on section_id
-INSERT INTO enrollments (student_id, section_id) 
-VALUES (1, 99999);
 
 -- ==========================================
 -- JOIN OPERATIONS & ANALYTICS
@@ -289,22 +415,20 @@ LIMIT 1;
 -- 4. Student Course Load
 
 SELECT 
-    sp.first_name, 
-    sp.last_name, 
+    s.first_name, 
+    s.last_name, 
     COUNT(e.section_id) AS courses_taken
 FROM 
-    StudentProfile sp
+    students s
 JOIN 
-    enrollments e ON sp.student_id = e.student_id
+    enrollments e ON s.student_id = e.student_id
 GROUP BY 
-    sp.student_id, sp.first_name, sp.last_name;
-
+    s.student_id, s.first_name, s.last_name;
 
 -- 5. Highest Enrollment Instructor
 
 SELECT 
-    i.first_name, 
-    i.last_name, 
+    i.instructor_name, 
     COUNT(e.student_id) AS total_students_taught
 FROM 
     instructors i
@@ -313,32 +437,16 @@ JOIN
 JOIN 
     enrollments e ON cs.section_id = e.section_id
 GROUP BY 
-    i.instructor_id, i.first_name, i.last_name
+    i.instructor_id, i.instructor_name
 ORDER BY 
     total_students_taught DESC
 LIMIT 1;
 
--- =====================================
--- GRADE QUERIES
--- =====================================
+-- ==========================
+-- STUDENT ACADEMIC ANALYTICS
+--===========================
 
--- Basic queries
-
-SELeCt * from grades;
-
-select obtain_marks from grades where obtain_marks >= 80;
-
-SELECt total_marks from grades;
-
-SELECT grade from grades;
-
-SELECT grade from grades where enrollment_id = 1;
-
-SELECT grade from grades where grade = 'A';
-
-SELECT enrollment_id, grade, percentage from grades where grade_id = 1;
-
--- JOIN queries
+-- Student Academic Report
    -- OUTPUT DATA
 --Student | Course | Instructor | Grade | Total Marks | Obtain Marks | Percentage
 
@@ -376,7 +484,7 @@ WHERE e.student_id = 1;
 -- Analytics
 
 --Average marks
-SELECT AVG(obtain_marks) from grades;
+SELECT ROUND(AVG(obtain_marks),2) from grades;
 
 --Average per course
 SELECT 
@@ -410,48 +518,7 @@ GROUP BY c.course_name
 ORDER BY AVG(g.obtain_marks) DESC
 LIMIT 1;
 
--- Constraint tests
-INSERT INTO grades(enrollment_id, total_marks,obtain_marks)
-VALUES(9999,0939508,03895038520,'A, A+')
-
---CRUD OPERATION
-
---Create 
-INSERT INTO grades(enrollment_id,total_marks,obtain_marks,grade)
-VALUES(13,150,140,'A++')
-
---READ
-SELECT * From grades;
-
---UPDATE
-UPDATE grades SET obtain_marks = 150 WHERE grade_id = 16;
-
---DELETE
-DELETE FROM grades WHERE grade_id = 16;
-
--- =====================================
--- ATTENDANCE QUERIES
--- =====================================
-
--- Basic queries
-SELECT * from attendance;
-
-SELECT * from attendance where enrollment_id = 1;
-
-SELECT * from attendance where status = 'Present';
-
-SELECT * FROM attendance 
-WHERE enrollment_id = 4 
-ORDER BY attendance_date;
-
-SELECT * FROM attendance 
-WHERE status IN ('Absent', 'Late')
-ORDER BY attendance_date;
-
-SELECT * FROM attendance 
-WHERE attendance_date = '2026-08-26';
-
---Join queries
+--STUDENT ATTENDANCE
  -- OUTPUT DATA
 --Student | Course | Attendance Date | Status | Notes
 SELECT 
@@ -464,10 +531,10 @@ FROM attendance a
 JOIN enrollments e ON a.enrollment_id = e.enrollment_id
 JOIN students s ON e.student_id = s.student_id
 JOIN course_sections cs ON e.section_id = cs.section_id 
-JOIN courses c ON cs.course_id = c.course_id           
+JOIN courses c ON cs.course_id = c.course_id;          
 
 
--- ANLYTICS Queries
+-- STUDENT ATTENDANCE ANALYTICS Queries
 
 --OUTPUT DATA
 --Student | Present | Absent | Late | Excused | Total Classes | Attendance %
@@ -488,55 +555,12 @@ JOIN students s ON e.student_id = s.student_id
 GROUP BY s.student_id, s.first_name, s.last_name
 ORDER BY "Student Name";
 
---CRUD OPERATIONS
-
---CREATE
-INSERT INTO attendance (enrollment_id, status, notes)
-VALUES (1, 'Present', 'Arrived on time');
-
---READ
-SELECT * FROM attendance 
-WHERE enrollment_id = 1 AND attendance_date = CURRENT_DATE;
-
---UPDATE
-UPDATE attendance
-SET status = 'Excused', notes = 'Left early for doctor appointment'
-WHERE enrollment_id = 1 AND attendance_date = CURRENT_DATE;
-
---DELETE
-DELETE FROM attendance
-WHERE enrollment_id = 1 AND attendance_date = CURRENT_DATE;
-
---CONSTRAINT TESTING
---1. Create (Valid Insert)
-INSERT INTO attendance (enrollment_id, status, notes)
-VALUES (2, 'Present', 'Arrived on time');
-
---2. Create (Invalid Insert - Duplicate Record)
-INSERT INTO attendance (enrollment_id, status)
-VALUES (2, 'Late');
-
---3. Create (Invalid Insert - Invalid Status)
-INSERT INTO attendance (enrollment_id, status)
-VALUES (2, 'Suspended');
-
---4. Read (Valid Query)
-SELECT * FROM attendance 
-WHERE enrollment_id = 2 AND attendance_date = CURRENT_DATE;
-
---5. Update (Valid Update)
-UPDATE attendance
-SET status = 'Excused', notes = 'Left early for doctor appointment'
-WHERE enrollment_id = 2 AND attendance_date = CURRENT_DATE;
-
---6. Delete (Valid Delete)
-DELETE FROM attendance
-WHERE enrollment_id = 2 AND attendance_date = CURRENT_DATE;
-
-
 -- ==============================
--- ADVANCE QUIERIES
+-- ADVANCED QUERIES
 -- ==============================
+
+
+-- STUDENT OVERALL INFORMATION
 
 -- OUTPUT DATA
 --Student Name | Course Code | Course Name | Obtain Marks | Grade | Semester | Year | Credit Hours
@@ -565,10 +589,7 @@ ORDER BY
     cs.year DESC, 
     cs.semester DESC;
 
-
--- ================
 -- GPA CALCULATION
---=================
 
 --Output Data
 --Student ID | Student Name | GPA
@@ -608,9 +629,7 @@ ORDER BY
     "GPA" DESC;
 
 
--- ==================
 -- COURSE STATISTICS
---===================
 
 --Output Data
 --Course Code | Course Name | Total Students | Average Marks | Highest Marks | Lowest Marks
@@ -631,13 +650,12 @@ LEFT JOIN
     grades g ON e.enrollment_id = g.enrollment_id
 GROUP BY 
     c.course_id, 
+    c.course_code,
     c.course_name
 ORDER BY 
     c.course_name;
 
--- ==================
 -- Instructor Work
---===================
 
 --Output Data
 --Instructor Name | Total Courses | Total Students 
@@ -656,9 +674,8 @@ GROUP BY
 ORDER BY 
     "Students" DESC;
 
--- =======================
+
 -- DEPARTMENTS STATISTICS
---========================
 
 --Output Data
 --Department Name | Total Courses | Total Students | Total Instructors
@@ -712,7 +729,7 @@ ORDER BY
     cs.year DESC, 
     cs.semester DESC;
 
-
+-- READ 
 SELECT * FROM student_academic_report;
 
 
@@ -748,7 +765,7 @@ GROUP BY
     s.last_name,
     c.course_id,
     c.course_name;
-
+--READ
 SELECT * FROM student_attendance_report;
 
 -- ====================================
@@ -780,7 +797,7 @@ BEGIN;
 
 UPDATE students
 SET first_name = 'Ahmad'
-WHERE student_id = 1;
+WHERE student_id = 13;
 
 COMMIT;
 
@@ -789,7 +806,7 @@ BEGIN;
 
 UPDATE students
 SET first_name = 'Temporary'
-WHERE student_id = 1;
+WHERE student_id = 13;
 
 ROLLBACK;
 
